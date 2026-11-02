@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "duckdb": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-server-motherduck", "--db-path", "${workspaceFolder}/imobiliario.duckdb"]
+    }
+  }
+}
