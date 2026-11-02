@@ -1,0 +1,14 @@
+--Impacto da Inflação de Médio Prazo (IPCA 3, 6 e 12 meses) no IFIX
+--Examina como diferentes horizontes da inflação oficial afetam o mercado de FIIs.
+
+
+SELECT 
+    i.data,
+    i.ifix_fech,
+    ip.ipca_3_meses,
+    ip.ipca_6_meses,
+    ip.ipca_12_meses
+FROM refined.ifix i
+ASOF JOIN refined.ipca ip ON i.data >= ip.data
+WHERE EXTRACT(day from i.data) = 1
+ORDER BY i.data;

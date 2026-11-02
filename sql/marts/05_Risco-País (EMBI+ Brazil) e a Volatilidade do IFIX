@@ -1,0 +1,11 @@
+--Risco-País (EMBI+ Brazil) e a Volatilidade do IFIX
+--Cruza o risco soberano diário com a cotação do IFIX para medir a sensibilidade a choques externos e fiscais.
+
+
+SELECT 
+    i.data,
+    i.ifix_fech,
+    e.embi_brazil AS risco_pais_pontos
+FROM refined.ifix i
+JOIN refined.embi_brazil e ON i.data = e.data
+ORDER BY i.data;

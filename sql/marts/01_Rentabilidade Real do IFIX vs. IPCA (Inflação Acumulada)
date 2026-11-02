@@ -1,0 +1,15 @@
+--Rentabilidade Real do IFIX vs. IPCA (Inflação Acumulada)
+--Cruza o fechamento mensal do IFIX com a inflação acumulada do IPCA (12 meses) para avaliar a proteção do poder de compra.
+
+
+SELECT 
+    i.data,
+    i.ifix_fech,
+    p.ipca_12_meses,
+    -- Variação percentual mensal do IFIX
+    (i.ifix_fech - LAG(i.ifix_fech, 1) OVER (ORDER BY i.data)) / LAG(i.ifix_fech, 1) OVER (ORDER BY i.data) * 100 AS ifix_variacao_mensal,
+    p.ipca_mes AS inflacao_mes
+FROM refined.ifix i
+ASOF JOIN refined.ipca p ON i.data >= p.data
+WHERE EXTRACT(day from i.data) = 1  -- Amostragem mensal (primeiro dia útil)
+ORDER BY i.data;

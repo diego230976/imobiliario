@@ -1,0 +1,57 @@
+-- Taxa de Juros Real Ex-Ante (Selic Real: Selic menos IPCA 12m) vs. IFIX
+
+
+WITH selic_mensal AS (
+    SELECT
+        DATE_TRUNC('month', TRY_CAST(data AS DATE))::DATE AS mes,
+        ARG_MAX(
+            TRY_CAST(REPLACE(selic_meta, ',', '.') AS DOUBLE),
+            TRY_CAST(data AS DATE)
+        ) AS selic_pct_aa
+    FROM raw.selic
+    WHERE TRY_CAST(data AS DATE) IS NOT NULL
+      AND TRY_CAST(REPLACE(selic_meta, ',', '.') AS DOUBLE) IS NOT NULL
+    GROUP BY 1
+),
+ipca_mensal AS (
+    SELECT
+        TRY_CAST(data || '-01' AS DATE) AS mes,
+        TRY_CAST(REPLACE(ipca_12_meses, ',', '.') AS DOUBLE) AS ipca_12m_pct
+    FROM raw.ipca
+    WHERE TRY_CAST(data || '-01' AS DATE) IS NOT NULL
+      AND TRY_CAST(REPLACE(ipca_12_meses, ',', '.') AS DOUBLE) IS NOT NULL
+),
+ifix_mensal AS (
+    SELECT
+        DATE_TRUNC('month', TRY_CAST(data AS DATE))::DATE AS mes,
+        ARG_MAX(
+            TRY_CAST(REPLACE(ifix_fech, ',', '.') AS DOUBLE),
+            TRY_CAST(data AS DATE)
+        ) AS ifix_fechamento
+    FROM raw.ifix
+    WHERE TRY_CAST(data AS DATE) IS NOT NULL
+      AND TRY_CAST(REPLACE(ifix_fech, ',', '.') AS DOUBLE) IS NOT NULL
+    GROUP BY 1
+),
+ifix_com_retorno AS (
+    SELECT
+        mes,
+        ifix_fechamento,
+        100.0 * (
+            ifix_fechamento
+            / NULLIF(LAG(ifix_fechamento) OVER (ORDER BY mes), 0)
+            - 1
+        ) AS ifix_retorno_mensal_pct
+    FROM ifix_mensal
+)
+SELECT
+    i.mes,
+    s.selic_pct_aa AS selic_nominal_pct_aa,
+    p.ipca_12m_pct,
+    ROUND(s.selic_pct_aa - p.ipca_12m_pct, 2) AS selic_real_proxy_pct_aa,
+    i.ifix_fechamento,
+    ROUND(i.ifix_retorno_mensal_pct, 2) AS ifix_retorno_mensal_pct
+FROM ifix_com_retorno AS i
+JOIN selic_mensal AS s USING (mes)
+JOIN ipca_mensal AS p USING (mes)
+ORDER BY i.mes;

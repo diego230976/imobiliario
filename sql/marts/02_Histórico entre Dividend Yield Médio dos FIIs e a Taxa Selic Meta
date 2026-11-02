@@ -1,0 +1,13 @@
+-- Spread Histórico entre Dividend Yield Médio dos FIIs e a Taxa Selic Meta
+-- Compara o retorno diário/mensal da taxa Selic com a pontuação do IFIX (proxy para atratividade de renda fixa vs. renda variável imobiliária).
+
+
+SELECT 
+    i.data,
+    i.ifix_fech,
+    s.selic_meta AS selic_anual_pct,
+    -- Selic diária aproximada para comparação
+    POWER(1 + (s.selic_meta / 100), 1.0 / 252) - 1 AS selic_diaria_estimada
+FROM refined.ifix i
+ASOF JOIN refined.selic s ON i.data >= s.data
+ORDER BY i.data;

@@ -1,0 +1,12 @@
+--Correlação entre o Custo de Construção (INCC) e a Pontuação do IFIX
+--Cruza a variação do índice de custo da construção civil com o patamar do IFIX.
+
+
+SELECT 
+    DATE_TRUNC('month', i.data) AS mes,
+    AVG(i.ifix_fech) AS ifix_medio_mes,
+    n.incc AS incc_mensal
+FROM refined.ifix i
+ASOF JOIN refined.incc n ON i.data >= n.data
+GROUP BY 1, n.incc
+ORDER BY mes;

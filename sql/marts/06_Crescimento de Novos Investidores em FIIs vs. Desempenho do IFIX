@@ -1,0 +1,11 @@
+--Crescimento de Novos Investidores em FIIs vs. Desempenho do IFIX
+--Cruza a expansão da base de CPFs cadastrados na B3 com o nível de pontuação do índice de FIIs.
+
+
+SELECT 
+    inv.data,
+    inv.qtd_invest AS total_investidores,
+    i.ifix_fech AS ifix_fechamento_mes
+FROM refined.investidores_fii inv
+ASOF JOIN refined.ifix i ON inv.data >= i.data
+ORDER BY inv.data;

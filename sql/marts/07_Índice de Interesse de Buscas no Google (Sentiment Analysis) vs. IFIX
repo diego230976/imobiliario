@@ -1,0 +1,13 @@
+--Índice de Interesse de Buscas no Google (Sentiment Analysis) vs. IFIX
+--Analisa o termo de busca web (fii_gt, fundos_imob_gt, ifix_gt) frente ao comportamento do índice.
+
+
+SELECT 
+    g.data,
+    g.fii_gt,
+    g.fundos_imob_gt,
+    g.ifix_gt,
+    i.ifix_fech
+FROM refined.google_trends g
+ASOF JOIN refined.ifix i ON g.data >= i.data
+ORDER BY g.data;

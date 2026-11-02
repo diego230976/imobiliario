@@ -1,0 +1,12 @@
+--Evolução da Taxa de Câmbio (Dólar PTAX) e o IFIX
+--Avalia o comportamento conjunto do dólar de fechamento mensal e o desempenho dos fundos imobiliários.
+
+
+SELECT 
+    i.data,
+    i.ifix_fech,
+    d.dolar_fechamento
+FROM refined.ifix i
+ASOF JOIN refined.dolar d ON i.data >= d.data
+WHERE EXTRACT(day from i.data) = 1
+ORDER BY i.data;
