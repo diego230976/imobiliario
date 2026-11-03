@@ -1,4 +1,4 @@
-# imobiliario
+# Dados mercado imobiliário
 
 ## Camada mart
 
@@ -35,8 +35,18 @@ Os cartões mostram os valores da data mais recente disponível e não mudam com
 o filtro de período dos gráficos. O navegador precisa acessar o CDN do Plotly
 para carregar os gráficos incorporados.
 
+Gere também um relatório HTML estático com os mesmos cartões e gráficos:
+
+```powershell
+uv run python relatorio.py
+```
+
+O comando grava `relatorio.html` na raiz do projeto; abra o arquivo no
+navegador. O relatório usa o histórico completo disponível e carrega o Plotly
+do CDN.
+
 Execute os testes do painel e da Mart com:
 
 ```powershell
-uv run python -m pytest tests/test_painel.py tests/test_mart.py
+uv run python -m pytest tests/test_painel.py tests/test_mart.py tests/test_relatorio.py
 ```

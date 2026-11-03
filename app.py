@@ -90,8 +90,8 @@ st.markdown(
     <style>
     .block-container {padding-top: 1.5rem; padding-bottom: 2rem;}
     div[data-testid="stMetric"] {
-        background: #f5f8fa;
-        border: 1px solid #e3ebef;
+        background: light-dark(#f5f8fa, #262730);
+        border: 1px solid rgba(128, 128, 128, 0.25);
         border-radius: 0.75rem;
         padding: 0.75rem;
     }
