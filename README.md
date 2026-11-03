@@ -19,3 +19,24 @@ Execute os testes de contrato com:
 ```powershell
 uv run python -m pytest tests/test_mart.py
 ```
+
+## Painel de contexto
+
+Inicie o painel Streamlit com:
+
+```powershell
+uv run streamlit run app.py
+```
+
+O painel lê somente `mart.indicadores_imobiliarios`; gere ou atualize essa
+tabela com `uv run python -m pipeline.mart`. Os nove gráficos podem ser
+movidos e redimensionados, e o layout pode ser restaurado pelo próprio painel.
+Os cartões mostram os valores da data mais recente disponível e não mudam com
+o filtro de período dos gráficos. O navegador precisa acessar o CDN do Plotly
+para carregar os gráficos incorporados.
+
+Execute os testes do painel e da Mart com:
+
+```powershell
+uv run python -m pytest tests/test_painel.py tests/test_mart.py
+```
